@@ -1,5 +1,6 @@
 # Dexterous Hand Asset Processing
 
+All the commands below run inside the `dexmachina/dexmachina/` directory. 
 0. Also need to run`retargeting/process_arctic.py` to get approximate contacts, this is done once for all object clips
 
 ## Inspect and Prepare URDFs

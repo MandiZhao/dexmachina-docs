@@ -10,7 +10,7 @@
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <link rel="stylesheet" type="text/css" href="_static/ansi.css" />
+    <link rel="stylesheet" type="text/css" href="_static/ansi.css?v=7dca4c98" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
     
     
@@ -225,7 +225,7 @@
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <link rel="stylesheet" type="text/css" href="_static/ansi.css" />
+    <link rel="stylesheet" type="text/css" href="_static/ansi.css?v=7dca4c98" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
     
     
@@ -323,6 +323,11 @@
         <article role="main" id="furo-main-content">
           <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h1>
+<p><em>If you’d like to install the entire conda environment that includes all the packages, use the yaml file:</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">dexmachina</span>
+<span class="n">conda</span> <span class="n">env</span> <span class="n">create</span> <span class="o">-</span><span class="n">f</span> <span class="n">dexmachina</span><span class="o">.</span><span class="n">yml</span>
+</pre></div>
+</div>
 <section id="minimal-requirements">
 <h2>Minimal Requirements<a class="headerlink" href="#minimal-requirements" title="Link to this heading">¶</a></h2>
 <ol class="arabic simple">
@@ -342,34 +347,46 @@
 </pre></div>
 </div>
 <ol class="arabic simple" start="3">
-<li><p>Install this custom version of rl-games, which supports wandb logging and curriculum setting.</p></li>
+<li><p>Install this custom version of rl-games, which supports wandb logging and curriculum setting.
+First, install prerequisites for rl-games:</p></li>
 </ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">gymnasium</span> <span class="n">ray</span> 
+</pre></div>
+</div>
+<p>Next, fork and local-install this repo:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">MandiZhao</span><span class="o">/</span><span class="n">rl_games</span><span class="o">.</span><span class="n">git</span>
 <span class="n">cd</span> <span class="n">rl_games</span>
 <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
 </pre></div>
 </div>
-<p><em>If you’d like to install the full conda environment that includes all the packages, use the yaml file:</em></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">env</span> <span class="n">create</span> <span class="o">-</span><span class="n">f</span> <span class="n">dexmachina</span><span class="o">.</span><span class="n">yml</span>
+<ol class="arabic simple" start="4">
+<li><p>Install additional packages for logging, plotting, video export, etc.</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">seaborn</span> <span class="n">wandb</span> <span class="n">trimesh</span>
 </pre></div>
 </div>
 </section>
 <section id="additional-package-dependencies">
 <h2>Additional Package Dependencies<a class="headerlink" href="#additional-package-dependencies" title="Link to this heading">¶</a></h2>
-<ol class="arabic simple">
-<li><p>Kinematic retargeting
-Install the <a class="reference external" href="https://github.com/dexsuite/dex-retargeting">dex-retargeting</a> package:</p></li>
-</ol>
+<section id="kinematic-retargeting">
+<h3>Kinematic retargeting<a class="headerlink" href="#kinematic-retargeting" title="Link to this heading">¶</a></h3>
+<p>Install the <a class="reference external" href="https://github.com/dexsuite/dex-retargeting">dex-retargeting</a> package:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">dex_retargeting</span>
 </pre></div>
 </div>
-<p>Note that this might downgrade your numpy to <code class="docutils literal notranslate"><span class="pre">numpy==1.26.4</span></code>, but it runs fine with rest of the codebase.
-2. Process Additional ARCTIC data
-3. Raytracing rendering</p>
+<p>Note that this might downgrade your numpy to <code class="docutils literal notranslate"><span class="pre">numpy==1.26.4</span></code>, but it runs fine with rest of the codebase.</p>
+</section>
+<section id="process-additional-arctic-data">
+<h3>Process Additional ARCTIC data<a class="headerlink" href="#process-additional-arctic-data" title="Link to this heading">¶</a></h3>
+<p>Follow instructions from ARCTIC repo and install in a <em>separate</em> conda environment: https://github.com/zc-alexfan/arctic/blob/master/docs/setup.md</p>
+</section>
+<section id="raytracing-rendering">
+<h3>Raytracing rendering<a class="headerlink" href="#raytracing-rendering" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Follow the official instruction to build this separate raytracer package: <a class="reference external" href="https://genesis-world.readthedocs.io/en/latest/user_guide/getting_started/visualization.html#photo-realistic-ray-tracing-rendering">here</a></p></li>
 <li><p>You might need sudo install a new cuda driver globally: Try <code class="docutils literal notranslate"><span class="pre">wget</span></code> to install <a class="reference external" href="https://developer.nvidia.com/cuda-12-2-2-download-archive?target_os=Linux&amp;amp;target_arch=x86_64&amp;amp;Distribution=Ubuntu&amp;amp;target_version=22.04&amp;amp;target_type=deb_local">this link</a> – it installs the latest driver 570 and cuda12.8</p></li>
 </ul>
+</section>
 </section>
 </section>
 
@@ -437,7 +454,12 @@ Install the <a class="reference external" href="https://github.com/dexsuite/dex-
             <ul>
 <li><a class="reference internal" href="#">Installation</a><ul>
 <li><a class="reference internal" href="#minimal-requirements">Minimal Requirements</a></li>
-<li><a class="reference internal" href="#additional-package-dependencies">Additional Package Dependencies</a></li>
+<li><a class="reference internal" href="#additional-package-dependencies">Additional Package Dependencies</a><ul>
+<li><a class="reference internal" href="#kinematic-retargeting">Kinematic retargeting</a></li>
+<li><a class="reference internal" href="#process-additional-arctic-data">Process Additional ARCTIC data</a></li>
+<li><a class="reference internal" href="#raytracing-rendering">Raytracing rendering</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
