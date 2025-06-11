@@ -325,18 +325,30 @@
 <h1>Example Usage<a class="headerlink" href="#example-usage" title="Link to this heading">¶</a></h1>
 <section id="inspect-dexterous-hands-and-arctic-objects">
 <h2>Inspect Dexterous Hands and ARCTIC objects<a class="headerlink" href="#inspect-dexterous-hands-and-arctic-objects" title="Link to this heading">¶</a></h2>
+<section id="load-one-dexterous-hand-into-a-basic-genesis-scene">
+<h3>Load one dexterous hand into a basic Genesis scene<a class="headerlink" href="#load-one-dexterous-hand-into-a-basic-genesis-scene" title="Link to this heading">¶</a></h3>
 <ul class="simple">
-<li><p>To load one dexterous hand (either left or right hand) into a basic Genesis scene:</p></li>
+<li><p>This default loads the left side hand to the scene</p></li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">examples</span><span class="o">/</span><span class="n">inspect_hand</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">hand</span> <span class="n">allegro_hand</span> <span class="o">--</span><span class="n">vis</span>
 </pre></div>
 </div>
-<ul class="simple">
-<li><p>Load a pre-processed ARCTIC articulated object and show one demonstration trajectory:</p></li>
-</ul>
+<p>Update 06/10/2025: this script now supports all 6 hands used in our <a class="reference external" href="http://arxiv.org/abs/2505.24853">paper preprint</a>. Run the following (add <code class="docutils literal notranslate"><span class="pre">--vis</span></code> tag for on-screen viewer):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">examples</span><span class="o">/</span><span class="n">inspect_hand</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">hand</span> <span class="n">ability_hand</span>
+<span class="n">python</span> <span class="n">examples</span><span class="o">/</span><span class="n">inspect_hand</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">hand</span> <span class="n">allegro_hand</span>
+<span class="n">python</span> <span class="n">examples</span><span class="o">/</span><span class="n">inspect_hand</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">hand</span> <span class="n">dexrobot_hand</span>
+<span class="n">python</span> <span class="n">examples</span><span class="o">/</span><span class="n">inspect_hand</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">hand</span> <span class="n">inspire_hand</span>
+<span class="n">python</span> <span class="n">examples</span><span class="o">/</span><span class="n">inspect_hand</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">hand</span> <span class="n">schunk_hand</span>
+<span class="n">python</span> <span class="n">examples</span><span class="o">/</span><span class="n">inspect_hand</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">hand</span> <span class="n">xhand</span>
+</pre></div>
+</div>
+</section>
+<section id="load-a-pre-processed-arctic-object-and-show-one-human-demonstration-trajectory">
+<h3>Load a pre-processed ARCTIC object and show one human demonstration trajectory:<a class="headerlink" href="#load-a-pre-processed-arctic-object-and-show-one-human-demonstration-trajectory" title="Link to this heading">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">examples</span><span class="o">/</span><span class="n">load_object</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">obj_name</span> <span class="n">box</span> 
 </pre></div>
 </div>
+</section>
 </section>
 </section>
 
@@ -403,7 +415,11 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Example Usage</a><ul>
-<li><a class="reference internal" href="#inspect-dexterous-hands-and-arctic-objects">Inspect Dexterous Hands and ARCTIC objects</a></li>
+<li><a class="reference internal" href="#inspect-dexterous-hands-and-arctic-objects">Inspect Dexterous Hands and ARCTIC objects</a><ul>
+<li><a class="reference internal" href="#load-one-dexterous-hand-into-a-basic-genesis-scene">Load one dexterous hand into a basic Genesis scene</a></li>
+<li><a class="reference internal" href="#load-a-pre-processed-arctic-object-and-show-one-human-demonstration-trajectory">Load a pre-processed ARCTIC object and show one human demonstration trajectory:</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

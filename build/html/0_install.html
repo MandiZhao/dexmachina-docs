@@ -335,7 +335,7 @@
 <ol class="arabic simple" start="2">
 <li><p>Clone and install this custom fork version of Genesis (a modified version that supports entity-to-entity contact position reading, disable default visualizer, group-based collision filtering, etc)</p></li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">torch</span><span class="o">==</span><span class="mf">2.2.2</span> 
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">torch</span><span class="o">==</span><span class="mf">2.5.1</span>
 <span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">MandiZhao</span><span class="o">/</span><span class="n">Genesis</span><span class="o">.</span><span class="n">git</span>
 <span class="n">cd</span> <span class="n">Genesis</span>
 <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
@@ -349,15 +349,23 @@
 <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
 </pre></div>
 </div>
+<p><em>If you’d like to install the full conda environment that includes all the packages, use the yaml file:</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">env</span> <span class="n">create</span> <span class="o">-</span><span class="n">f</span> <span class="n">dexmachina</span><span class="o">.</span><span class="n">yml</span>
+</pre></div>
+</div>
 </section>
 <section id="additional-package-dependencies">
 <h2>Additional Package Dependencies<a class="headerlink" href="#additional-package-dependencies" title="Link to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>Kinematic retargeting
-Install the <a class="reference external" href="https://github.com/dexsuite/dex-retargeting">dex-retargeting</a> package:<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">dex_retargeting</span></code>.</p></li>
-<li><p>Process Additional ARCTIC data</p></li>
-<li><p>Raytracing rendering</p></li>
+Install the <a class="reference external" href="https://github.com/dexsuite/dex-retargeting">dex-retargeting</a> package:</p></li>
 </ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">dex_retargeting</span>
+</pre></div>
+</div>
+<p>Note that this might downgrade your numpy to <code class="docutils literal notranslate"><span class="pre">numpy==1.26.4</span></code>, but it runs fine with rest of the codebase.
+2. Process Additional ARCTIC data
+3. Raytracing rendering</p>
 <ul class="simple">
 <li><p>Follow the official instruction to build this separate raytracer package: <a class="reference external" href="https://genesis-world.readthedocs.io/en/latest/user_guide/getting_started/visualization.html#photo-realistic-ray-tracing-rendering">here</a></p></li>
 <li><p>You might need sudo install a new cuda driver globally: Try <code class="docutils literal notranslate"><span class="pre">wget</span></code> to install <a class="reference external" href="https://developer.nvidia.com/cuda-12-2-2-download-archive?target_os=Linux&amp;amp;target_arch=x86_64&amp;amp;Distribution=Ubuntu&amp;amp;target_version=22.04&amp;amp;target_type=deb_local">this link</a> – it installs the latest driver 570 and cuda12.8</p></li>

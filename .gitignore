@@ -1,1 +1,4 @@
 .README.md.swp
+_temp_build/
+.doctrees/
+.buildinfo

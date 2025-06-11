@@ -8,7 +8,7 @@ conda activate dexmachina
 ```
 2. Clone and install this custom fork version of Genesis (a modified version that supports entity-to-entity contact position reading, disable default visualizer, group-based collision filtering, etc) 
 ```
-pip install torch==2.2.2 
+pip install torch==2.5.1
 git clone https://github.com/MandiZhao/Genesis.git
 cd Genesis
 pip install -e .
@@ -20,11 +20,19 @@ git clone https://github.com/MandiZhao/rl_games.git
 cd rl_games
 pip install -e .
 ```
+*If you'd like to install the full conda environment that includes all the packages, use the yaml file:*
+```
+conda env create -f dexmachina.yml
+```
 
 ## Additional Package Dependencies 
 
 1. Kinematic retargeting
-Install the [dex-retargeting](https://github.com/dexsuite/dex-retargeting) package:`pip install dex_retargeting`. 
+Install the [dex-retargeting](https://github.com/dexsuite/dex-retargeting) package:
+```
+pip install dex_retargeting
+```
+Note that this might downgrade your numpy to `numpy==1.26.4`, but it runs fine with rest of the codebase.
 2. Process Additional ARCTIC data 
 3. Raytracing rendering 
 - Follow the official instruction to build this separate raytracer package: [here](https://genesis-world.readthedocs.io/en/latest/user_guide/getting_started/visualization.html#photo-realistic-ray-tracing-rendering)
