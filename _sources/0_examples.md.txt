@@ -22,3 +22,10 @@ python examples/inspect_hand.py --hand xhand
 ```
 python examples/load_object.py --obj_name box 
 ```
+
+### Train an RL policy with our proposed curriculum
+Assume wandb logging is [setup](https://wandb.ai/). Run the bash script below:
+```
+cd dexmachina
+bash examples/train_rl.sh
+```

@@ -6,11 +6,11 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Advanced Rendering" href="5_rendering.html" /><link rel="prev" title="Kinematic Retargeting" href="3_retargeting.html" />
 
     <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
-        <title>Basic Usage Examples - dexmachina</title>
+        <title>RL Training and Evaluation - dexmachina</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <link rel="stylesheet" type="text/css" href="_static/ansi.css" />
+    <link rel="stylesheet" type="text/css" href="_static/ansi.css?v=7dca4c98" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
     
     
@@ -182,7 +182,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -221,11 +221,11 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Advanced Rendering" href="5_rendering.html" /><link rel="prev" title="Kinematic Retargeting" href="3_retargeting.html" />
 
     <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
-        <title>Basic Usage Examples - dexmachina</title>
+        <title>RL Training and Evaluation - dexmachina</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <link rel="stylesheet" type="text/css" href="_static/ansi.css" />
+    <link rel="stylesheet" type="text/css" href="_static/ansi.css?v=7dca4c98" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
     
     
@@ -279,7 +279,7 @@
 <li class="toctree-l1"><a class="reference internal" href="1_process_hands.html">Dexterous Hand Asset Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="2_process_demo.html">ARCTIC Human Demonstration Data Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="3_retargeting.html">Kinematic Retargeting</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Basic Usage Examples</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">RL Training and Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="5_rendering.html">Advanced Rendering</a></li>
 </ul>
 
@@ -315,21 +315,35 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="basic-usage-examples">
-<h1>Basic Usage Examples<a class="headerlink" href="#basic-usage-examples" title="Link to this heading">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">dexmachina/envs</span></code> module contains the following main components:</p>
-<ol class="arabic simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">BaseRobot</span></code> in <code class="docutils literal notranslate"><span class="pre">dexmachina/envs/robot.py</span></code></p></li>
-</ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">examples</span><span class="o">/</span><span class="n">inspect_hand</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">vis</span> <span class="c1"># remove this tag to run offscreen without rendering</span>
+          <section id="rl-training-and-evaluation">
+<h1>RL Training and Evaluation<a class="headerlink" href="#rl-training-and-evaluation" title="Link to this heading">¶</a></h1>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
+<p>Our RL training code is based on rl-games, install the package requirements below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">gymnasium</span> <span class="n">ray</span> <span class="n">seaborn</span> <span class="n">wandb</span> <span class="n">trimesh</span>
 </pre></div>
 </div>
+<p>Next, fork and local-install our custom fork of rl-games repo:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">MandiZhao</span><span class="o">/</span><span class="n">rl_games</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">rl_games</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span> 
+</pre></div>
+</div>
+</section>
+<section id="rl-training">
+<h2>RL Training<a class="headerlink" href="#rl-training" title="Link to this heading">¶</a></h2>
+<p>Assume wandb logging is <a class="reference external" href="https://wandb.ai/">setup</a>. Run the bash script below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">dexmachina</span>
+<span class="n">bash</span> <span class="n">examples</span><span class="o">/</span><span class="n">train_rl</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+</section>
 </section>
 
         </article>
@@ -382,8 +396,28 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">RL Training and Evaluation</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#rl-training">RL Training</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

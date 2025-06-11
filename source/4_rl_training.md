@@ -1,8 +1,22 @@
-# Basic Usage Examples
+# RL Training and Evaluation
 
-The `dexmachina/envs` module contains the following main components:
+## Installation
+Our RL training code is based on rl-games, install the package requirements below:
 
-1. `BaseRobot` in `dexmachina/envs/robot.py`
 ```
-python examples/inspect_hand.py --vis # remove this tag to run offscreen without rendering
+pip install gymnasium ray seaborn wandb trimesh
+```
+Next, fork and local-install our custom fork of rl-games repo:
+
+```
+git clone https://github.com/MandiZhao/rl_games.git
+cd rl_games
+pip install -e . 
+```
+
+## RL Training 
+Assume wandb logging is [setup](https://wandb.ai/). Run the bash script below:
+```
+cd dexmachina
+bash examples/train_rl.sh
 ```

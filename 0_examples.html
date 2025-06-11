@@ -10,7 +10,7 @@
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <link rel="stylesheet" type="text/css" href="_static/ansi.css" />
+    <link rel="stylesheet" type="text/css" href="_static/ansi.css?v=7dca4c98" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
     
     
@@ -225,7 +225,7 @@
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <link rel="stylesheet" type="text/css" href="_static/ansi.css" />
+    <link rel="stylesheet" type="text/css" href="_static/ansi.css?v=7dca4c98" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
     
     
@@ -279,7 +279,7 @@
 <li class="toctree-l1"><a class="reference internal" href="1_process_hands.html">Dexterous Hand Asset Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="2_process_demo.html">ARCTIC Human Demonstration Data Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="3_retargeting.html">Kinematic Retargeting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4_rl_training.html">Basic Usage Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_rl_training.html">RL Training and Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="5_rendering.html">Advanced Rendering</a></li>
 </ul>
 
@@ -346,6 +346,14 @@
 <section id="load-a-pre-processed-arctic-object-and-show-one-human-demonstration-trajectory">
 <h3>Load a pre-processed ARCTIC object and show one human demonstration trajectory:<a class="headerlink" href="#load-a-pre-processed-arctic-object-and-show-one-human-demonstration-trajectory" title="Link to this heading">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">examples</span><span class="o">/</span><span class="n">load_object</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">obj_name</span> <span class="n">box</span> 
+</pre></div>
+</div>
+</section>
+<section id="train-an-rl-policy-with-our-proposed-curriculum">
+<h3>Train an RL policy with our proposed curriculum<a class="headerlink" href="#train-an-rl-policy-with-our-proposed-curriculum" title="Link to this heading">¶</a></h3>
+<p>Assume wandb logging is <a class="reference external" href="https://wandb.ai/">setup</a>. Run the bash script below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">dexmachina</span>
+<span class="n">bash</span> <span class="n">examples</span><span class="o">/</span><span class="n">train_rl</span><span class="o">.</span><span class="n">sh</span>
 </pre></div>
 </div>
 </section>
@@ -418,6 +426,7 @@
 <li><a class="reference internal" href="#inspect-dexterous-hands-and-arctic-objects">Inspect Dexterous Hands and ARCTIC objects</a><ul>
 <li><a class="reference internal" href="#load-one-dexterous-hand-into-a-basic-genesis-scene">Load one dexterous hand into a basic Genesis scene</a></li>
 <li><a class="reference internal" href="#load-a-pre-processed-arctic-object-and-show-one-human-demonstration-trajectory">Load a pre-processed ARCTIC object and show one human demonstration trajectory:</a></li>
+<li><a class="reference internal" href="#train-an-rl-policy-with-our-proposed-curriculum">Train an RL policy with our proposed curriculum</a></li>
 </ul>
 </li>
 </ul>
