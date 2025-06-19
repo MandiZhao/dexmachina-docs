@@ -20,3 +20,4 @@ python scripts_data/visualizer.py --no_image --seq_p arctic/outputs/processed_ve
 Then, come back to this `dexmachina` repo and run `process_arctic.py` to further process the output demonstration sequences.
 
 ## Convex Decomposition on Collision Mesh
+We use V-HACD for collision shape decomposition. 

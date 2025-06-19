@@ -3,14 +3,14 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Basic Usage Examples" href="4_rl_training.html" /><link rel="prev" title="ARCTIC Human Demonstration Data Processing" href="2_process_demo.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="RL Training and Evaluation" href="4_rl_training.html" /><link rel="prev" title="ARCTIC Human Demonstration Data Processing" href="2_process_demo.html" />
 
     <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
         <title>Kinematic Retargeting - dexmachina</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <link rel="stylesheet" type="text/css" href="_static/ansi.css" />
+    <link rel="stylesheet" type="text/css" href="_static/ansi.css?v=7dca4c98" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
     
     
@@ -218,14 +218,14 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Basic Usage Examples" href="4_rl_training.html" /><link rel="prev" title="ARCTIC Human Demonstration Data Processing" href="2_process_demo.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="RL Training and Evaluation" href="4_rl_training.html" /><link rel="prev" title="ARCTIC Human Demonstration Data Processing" href="2_process_demo.html" />
 
     <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
         <title>Kinematic Retargeting - dexmachina</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <link rel="stylesheet" type="text/css" href="_static/ansi.css" />
+    <link rel="stylesheet" type="text/css" href="_static/ansi.css?v=7dca4c98" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
     
     
@@ -279,7 +279,7 @@
 <li class="toctree-l1"><a class="reference internal" href="1_process_hands.html">Dexterous Hand Asset Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="2_process_demo.html">ARCTIC Human Demonstration Data Processing</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Kinematic Retargeting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4_rl_training.html">Basic Usage Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_rl_training.html">RL Training and Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="5_rendering.html">Advanced Rendering</a></li>
 </ul>
 
@@ -330,10 +330,29 @@
 </div>
 <section id="hand-config-preparation">
 <h2>Hand Config Preparation<a class="headerlink" href="#hand-config-preparation" title="Link to this heading">¶</a></h2>
-<p>For each new pair of dexterous hands, you would need to add its URDF and mesh assets into <code class="docutils literal notranslate"><span class="pre">assets</span></code> folder, and manually add a new <code class="docutils literal notranslate"><span class="pre">assets/hand_folder/retarget_config.yaml</span></code> file, which specifies the desired fingertip mapping from dexterous hand keypoints to human hands (MANO hands). See more information in <a class="reference internal" href="1_process_hands.html"><span class="doc">Dexterous Hand Asset Processing</span></a>.</p>
+<p><strong>See the previous page <a class="reference internal" href="1_process_hands.html"><span class="doc">Dexterous Hand Asset Processing</span></a> for full details on processing new dexterous hand assets.</strong></p>
+<p>For each new pair of dexterous hands, you would need to add its URDF and mesh assets into <code class="docutils literal notranslate"><span class="pre">assets</span></code> folder, and manually add a new <code class="docutils literal notranslate"><span class="pre">assets/hand_folder/retarget_config.yaml</span></code> file, which specifies the desired fingertip mapping from dexterous hand keypoints to human hands (MANO hands).</p>
 </section>
 <section id="collision-aware-physics-enabled-retargeting">
 <h2>Collision-aware Physics-enabled Retargeting<a class="headerlink" href="#collision-aware-physics-enabled-retargeting" title="Link to this heading">¶</a></h2>
+<p>We propose a simple object-aware retargeting scheme that leverages the parallel simulation environments. Run two stages so that first stage gives collision-free joints on individual steps, then second stage loads the result and roll-out in a single-threaded environment to get smoothed-out motions.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>OBJ=box
+HAND=dex3_hand
+CLIP=${OBJ}-0-600
+python retargeting/parallel_retarget.py --clip $CLIP --hand ${HAND} --control_steps 2000 --save_name para --save -ow 
+</pre></div>
+</div>
+</section>
+<section id="contact-retargeting">
+<h2>Contact Retargeting<a class="headerlink" href="#contact-retargeting" title="Link to this heading">¶</a></h2>
+<p>Next we can use the kinematic retargeting results to set the robot to human-like motions, then use these robot poses to find where the hand-object contacts should be on the robot hand. For this, you need both processed ARCTIC data in <code class="docutils literal notranslate"><span class="pre">assets/arctic/processed</span></code>, and run something like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>HAND=dex3_hand
+FNAME=assets/arctic/processed/s01/box_use_01.npy
+python retargeting/map_contacts.py --hand $HAND --load_fname $FNAME
+</pre></div>
+</div>
+<p>This will save a new file to <code class="docutils literal notranslate"><span class="pre">assets/contact_retarget/dex3_hand/s01/box_use_01.npy</span></code>.</p>
+<p><strong>Now you are all setup to train RL policy with this hand+demo clip combo!</strong></p>
 </section>
 </section>
 
@@ -347,7 +366,7 @@
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Basic Usage Examples</div>
+                <div class="title">RL Training and Evaluation</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -402,6 +421,7 @@
 <li><a class="reference internal" href="#">Kinematic Retargeting</a><ul>
 <li><a class="reference internal" href="#hand-config-preparation">Hand Config Preparation</a></li>
 <li><a class="reference internal" href="#collision-aware-physics-enabled-retargeting">Collision-aware Physics-enabled Retargeting</a></li>
+<li><a class="reference internal" href="#contact-retargeting">Contact Retargeting</a></li>
 </ul>
 </li>
 </ul>

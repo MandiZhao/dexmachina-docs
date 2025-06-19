@@ -279,7 +279,7 @@
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Dexterous Hand Asset Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="2_process_demo.html">ARCTIC Human Demonstration Data Processing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="3_retargeting.html">Kinematic Retargeting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="4_rl_training.html">Basic Usage Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="4_rl_training.html">RL Training and Evaluation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="5_rendering.html">Advanced Rendering</a></li>
 </ul>
 
@@ -323,86 +323,171 @@
         <article role="main" id="furo-main-content">
           <section id="dexterous-hand-asset-processing">
 <h1>Dexterous Hand Asset Processing<a class="headerlink" href="#dexterous-hand-asset-processing" title="Link to this heading">¶</a></h1>
-<p>All the commands below run inside the <code class="docutils literal notranslate"><span class="pre">dexmachina/dexmachina/</span></code> directory.
-0. Also need to run<code class="docutils literal notranslate"><span class="pre">retargeting/process_arctic.py</span></code> to get approximate contacts, this is done once for all object clips</p>
+<p>All the commands below run inside the <code class="docutils literal notranslate"><span class="pre">dexmachina/dexmachina/</span></code> directory. Please follow the steps in the exact order below, as many of them strictly depend on completing the previous step(s).</p>
+<ol class="arabic simple" start="0">
+<li><p>After the below processing steps, also need to run<code class="docutils literal notranslate"><span class="pre">retargeting/process_arctic.py</span></code> to get approximate contacts, this is done once for all object clips</p></li>
+</ol>
 <section id="inspect-and-prepare-urdfs">
 <h2>Inspect and Prepare URDFs<a class="headerlink" href="#inspect-and-prepare-urdfs" title="Link to this heading">¶</a></h2>
-<ol class="arabic simple">
-<li><p>Clean up and inspect urdfs. Run <code class="docutils literal notranslate"><span class="pre">inspect_raw_urdf.py</span></code> to get a sense of collision geometry, default joint ranges
-Note that we only did a rough pass on the URDFs to make sure the masses are approximately reasonable, but not the inertials – we rely on the <code class="docutils literal notranslate"><span class="pre">recompute_inertia</span></code> flag <a class="reference external" href="https://github.com/Genesis-Embodied-AI/Genesis/blob/ca97a18b6b81fb7998fb36ead69761daf23241b1/genesis/engine/solvers/rigid/collider_decomp.py#L87">here</a> from Genesis to estimate the uniform-density link inertials.</p></li>
-</ol>
+<section id="clean-up-and-inspect-urdfs">
+<h3>1. Clean up and inspect URDFs<a class="headerlink" href="#clean-up-and-inspect-urdfs" title="Link to this heading">¶</a></h3>
+<p>I highly recommend this <a class="reference external" href="https://gkjohnson.github.io/urdf-loaders/javascript/example/bundle/index.html">URDF viewer</a> – very handy tool that lets you drag &amp; drop a <strong>folder</strong> containing urdf files into your browser and visualize the robots.
+Run <code class="docutils literal notranslate"><span class="pre">inspect_raw_urdf.py</span></code> to get a sense of collision geometry, default joint ranges
+Note that we only did a rough pass on the URDFs to make sure the masses are approximately reasonable, but not the inertials – we rely on the <code class="docutils literal notranslate"><span class="pre">recompute_inertia</span></code> flag <a class="reference external" href="https://github.com/Genesis-Embodied-AI/Genesis/blob/ca97a18b6b81fb7998fb36ead69761daf23241b1/genesis/engine/solvers/rigid/collider_decomp.py#L87">here</a> from Genesis to estimate the uniform-density link inertials.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">hand_proc</span><span class="o">/</span><span class="n">inspect_raw_urdf</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">urdf_path</span> <span class="n">assets</span><span class="o">/</span><span class="n">xhand</span><span class="o">/</span><span class="n">xhand_left_copy</span><span class="o">.</span><span class="n">urdf</span> <span class="o">-</span><span class="n">v</span>
 </pre></div>
 </div>
-<ol class="arabic simple" start="2">
-<li><p>Add 6dof wrist joints to the hand urdf. This is assuming the raw URDF file has a base link (typically the palm link, specified as <code class="docutils literal notranslate"><span class="pre">--base_link</span></code> in the script) and Run <code class="docutils literal notranslate"><span class="pre">add_wrist_dof.py</span></code>:</p></li>
-</ol>
+</section>
+<section id="add-6dof-wrist-joints-to-the-hand-urdf">
+<h3>2. Add 6dof wrist joints to the hand URDF<a class="headerlink" href="#add-6dof-wrist-joints-to-the-hand-urdf" title="Link to this heading">¶</a></h3>
+<p>This is assuming the raw URDF file has a base link (typically the palm link, specified as <code class="docutils literal notranslate"><span class="pre">--base_link</span></code> in the script) and Run <code class="docutils literal notranslate"><span class="pre">add_wrist_dof.py</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">hand_proc</span><span class="o">/</span><span class="n">add_wrist_dof</span><span class="o">.</span><span class="n">py</span> <span class="n">assets</span><span class="o">/</span><span class="n">xhand</span><span class="o">/</span><span class="n">xhand_left_copy</span><span class="o">.</span><span class="n">urdf</span> <span class="n">xhand_left_6dof</span><span class="o">.</span><span class="n">urdf</span> <span class="o">--</span><span class="n">dof_choices</span> <span class="nb">all</span> <span class="o">--</span><span class="n">base_link</span> <span class="n">left_hand_link</span> 
 </pre></div>
 </div>
-<p>You can also use the same script but a flag to only print out joint names, this is useful for writing the retargeting config below.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">hand_proc</span><span class="o">/</span><span class="n">add_wrist_dof</span><span class="o">.</span><span class="n">py</span>  <span class="n">assets</span><span class="o">/</span><span class="n">xhand</span><span class="o">/</span><span class="n">xhand_left_copy</span><span class="o">.</span><span class="n">urdf</span> <span class="o">--</span><span class="n">print_joint_names</span>
+<p>You can also use the same script but a flag to only print out joint names, this is useful for writing the <code class="docutils literal notranslate"><span class="pre">target_joint_names</span></code> inside the retargeting config yaml in step 3 below.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">hand_proc</span><span class="o">/</span><span class="n">add_wrist_dof</span><span class="o">.</span><span class="n">py</span>  <span class="n">assets</span><span class="o">/</span><span class="n">xhand</span><span class="o">/</span><span class="n">xhand_left_copy</span><span class="o">.</span><span class="n">urdf</span> <span class="n">dummy</span><span class="o">.</span><span class="n">urdf</span> <span class="o">--</span><span class="n">print_joint_names</span>
 </pre></div>
 </div>
-<ol class="arabic simple" start="3">
-<li><p>Specify retargeting configs as a yaml file: this should include the fingertip mapping from robot fingers to MANO keypoints.
-Do a short re-targeting run to get reference trajs, we need this for controller gain tuning</p></li>
-</ol>
+</section>
+<section id="specify-retargeting-configs-as-yaml-file">
+<h3>3. Specify retargeting configs as yaml file<a class="headerlink" href="#specify-retargeting-configs-as-yaml-file" title="Link to this heading">¶</a></h3>
+<p>This should include the fingertip mapping from robot fingers to MANO keypoints. Use the keypoint convention on human hands from this image (<a class="reference external" href="https://github.com/zc-alexfan/arctic/blob/master/docs/data/data_doc.md">source</a>):<img alt="mano" src="_images/mano_right.png" />
+The retarget config yaml file should look something like this (example from `dexmachina/dexmachina/assets/inspire_hand/retarget_config.yaml):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">low_pass_alpha</span><span class="p">:</span> <span class="mf">0.6</span>
+<span class="n">scaling_factor</span><span class="p">:</span> <span class="mf">1.2</span>
+<span class="n">left</span><span class="p">:</span>
+  <span class="n">urdf_path</span><span class="p">:</span> <span class="n">left_xyz_copy</span><span class="o">.</span><span class="n">urdf</span> 
+  <span class="n">target_origin_link</span><span class="p">:</span> <span class="s2">&quot;base_link&quot;</span>
+  <span class="n">human_origin_idx</span><span class="p">:</span> <span class="mi">0</span>  
+  <span class="n">target_finger_links</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;L_TH_Tip&quot;</span><span class="p">,</span>  <span class="s2">&quot;L_FF_Tip&quot;</span><span class="p">,</span> <span class="s2">&quot;L_MF_Tip&quot;</span><span class="p">,</span> <span class="s2">&quot;L_RF_Tip&quot;</span><span class="p">,</span> <span class="s2">&quot;L_LF_Tip&quot;</span><span class="p">]</span>
+  <span class="n">human_finger_idxs</span><span class="p">:</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span>  
+  <span class="n">target_joint_names</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;L_TH_J1&#39;</span><span class="p">,</span> <span class="s1">&#39;L_TH_J2&#39;</span><span class="p">,</span> <span class="s1">&#39;L_FF_J1&#39;</span><span class="p">,</span> <span class="s1">&#39;L_MF_J1&#39;</span><span class="p">,</span> <span class="s1">&#39;L_RF_J1&#39;</span><span class="p">,</span> <span class="s1">&#39;L_LF_J1&#39;</span><span class="p">,</span> <span class="s1">&#39;L_forearm_tx_link_joint&#39;</span><span class="p">,</span> <span class="s1">&#39;L_forearm_ty_link_joint&#39;</span><span class="p">,</span> <span class="s1">&#39;L_forearm_tz_link_joint&#39;</span><span class="p">,</span> <span class="s1">&#39;L_forearm_roll_link_joint&#39;</span><span class="p">,</span> <span class="s1">&#39;L_forearm_pitch_link_joint&#39;</span><span class="p">,</span> <span class="s1">&#39;L_forearm_yaw_link_joint&#39;</span><span class="p">]</span>
+  <span class="n">wrist_body</span><span class="p">:</span> <span class="s2">&quot;base_link&quot;</span>
+
+<span class="n">right</span><span class="p">:</span>
+  <span class="p">[</span><span class="n">omitted</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="minimal-kinematic-re-targeting">
+<h3>4. Minimal Kinematic Re-targeting<a class="headerlink" href="#minimal-kinematic-re-targeting" title="Link to this heading">¶</a></h3>
+<p>Run the below script to get reference trajs, which are needed for controller gain tuning, the files saved here are NOT used for rl envs.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">hand_proc</span><span class="o">/</span><span class="n">minimal_retarget</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">clip</span> <span class="n">box</span><span class="o">-</span><span class="mi">20</span><span class="o">-</span><span class="mi">100</span> <span class="o">--</span><span class="n">hand</span> <span class="n">inspire_hand</span> <span class="c1"># add --vis flag for visualizing the retargeted traj</span>
 </pre></div>
 </div>
 <p>Note here that we use the fingertip indexing convention following <a class="reference external" href="https://github.com/zc-alexfan/arctic/tree/master">arctic</a></p>
-<ol class="arabic simple" start="4">
-<li><p>Specify collision groups</p></li>
-</ol>
+</section>
+<section id="specify-collision-groups">
+<h3>5. Specify collision groups<a class="headerlink" href="#specify-collision-groups" title="Link to this heading">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">hand_proc</span><span class="o">/</span><span class="n">inspect_raw_urdf</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">gather_geoms</span>  <span class="o">--</span><span class="n">num_envs</span> <span class="mi">1</span> <span class="o">--</span><span class="n">urdf_path</span> <span class="n">assets</span><span class="o">/</span><span class="n">schunk_hand</span><span class="o">/</span><span class="n">schunk_hand_left_6dof</span><span class="o">.</span><span class="n">urdf</span> <span class="o">--</span><span class="n">base_link_name</span> <span class="n">left_hand_e1</span>  
 </pre></div>
 </div>
 <p>This script will automatically sort through the kinematic chain and find all the collision links that belong in either the palm group or one of the fingers’ groups. Note that here we actually make a strong assumption that the left and right hand kinematics are symmetric: this is due to how we implemented a new group-based collision filtering in Genesis and it only supports one set of collison group for both hands in the same scene. This is sufficient for the current hands setup but might need improvements in the future.</p>
-<ol class="arabic simple" start="5">
-<li><p>Tuning controller gains
-See more details in section below. We default to give a 0.8 gravity compensation for all the hands.</p></li>
-<li><p>Add new hand config files to the existing code structure:</p></li>
-</ol>
+<p>The collisoin grouping result from this script should be added to the <code class="docutils literal notranslate"><span class="pre">.py</span></code> config file inside <code class="docutils literal notranslate"><span class="pre">dexmachina/envs/hand_cfgs/</span></code> – see instruction below:</p>
+</section>
+<section id="add-new-hand-config-files-to-the-existing-code-structure">
+<h3>6. Add new hand config files to the existing code structure<a class="headerlink" href="#add-new-hand-config-files-to-the-existing-code-structure" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add URDF and hand meshes to <code class="docutils literal notranslate"><span class="pre">dexmachina/dexmachina/assets</span></code></p></li>
-<li><p>For example, to add a new hand called <code class="docutils literal notranslate"><span class="pre">new_hand</span></code>, create <code class="docutils literal notranslate"><span class="pre">dexmachina/dexmachina/envs/hand_cfgs/new.py</span></code>, and specify urdf_path (make the <code class="docutils literal notranslate"><span class="pre">asset_dir</span></code> relative to <code class="docutils literal notranslate"><span class="pre">dexmachina/dexmachina/assets</span></code>), wrist_link_name, actuator parameters, collision_groups, following existing examples like <code class="docutils literal notranslate"><span class="pre">dexmachina/dexmachina/envs/hand_cfgs/inspire.py</span></code></p></li>
-<li><p>Make sure the new config contains both left and right side hands, and name it <code class="docutils literal notranslate"><span class="pre">NEW_CFGs</span></code> so the automatic import in <code class="docutils literal notranslate"><span class="pre">dexmachina/dexmachina/envs/robot.py</span></code> can find it.</p></li>
+<li><p>Add a new <code class="docutils literal notranslate"><span class="pre">.py</span></code> config file for simulation environments: for example, to add a new hand called <code class="docutils literal notranslate"><span class="pre">new_hand</span></code>, create <code class="docutils literal notranslate"><span class="pre">dexmachina/dexmachina/envs/hand_cfgs/new.py</span></code>, and specify urdf_path (make the <code class="docutils literal notranslate"><span class="pre">asset_dir</span></code> relative to <code class="docutils literal notranslate"><span class="pre">dexmachina/dexmachina/assets</span></code>), wrist_link_name, actuator parameters, collision_groups, following existing examples like <code class="docutils literal notranslate"><span class="pre">dexmachina/dexmachina/envs/hand_cfgs/inspire.py</span></code>.</p></li>
 </ul>
-<ol class="arabic simple" start="7">
-<li><p>Run full-retargeting
-This is our object-aware retargeting scheme that leverages the parallel sim. Running two stages so that first stage gives collision-free joints on individual steps, then second stage loads the result and roll-out in a single-threaded environment to get smoothed-out motions.</p></li>
-</ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>OBJ=box
-HAND=inspire_hand
-CLIP=${OBJ}-0-600
-python retargeting/parallel_retarget.py --clip $CLIP --hand ${HAND} --control_steps 2000 --save_name para --save -ow 
-# then run:
-python retargeting/smooth_retargets.py -lf $FNAME
-# record video:
-python tests/test_retarget.py -ugr -rn selfcol_smooth  --hand $HAND --clip $CLIP --skip_obj  -no_obj -ert 0 --record_video
+<p>Here’s an annotated example for processing the Unitree 3-fingered dex3 hand. Create <code class="docutils literal notranslate"><span class="pre">dexmachina/dexmachina/envs/hand_cfgs/dex3.py</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>  
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
+<span class="kn">from</span> <span class="nn">dexmachina.asset_utils</span> <span class="kn">import</span> <span class="n">get_urdf_path</span>
+
+<span class="n">dex3_asset_dir</span> <span class="o">=</span> <span class="s2">&quot;dex3_hand/&quot;</span> 
+<span class="n">left_rel_urdf</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">dex3_asset_dir</span><span class="p">,</span> <span class="s2">&quot;dex3_left_6dof.urdf&quot;</span><span class="p">)</span> <span class="c1"># -&gt; these files should be processed URDF with floating 6dof wrist joints  </span>
+<span class="n">right_rel_urdf</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">dex3_asset_dir</span><span class="p">,</span> <span class="s2">&quot;dex3_right_6dof.urdf&quot;</span><span class="p">)</span>
+
+<span class="n">DEX3_LEFT_CFG</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;urdf_path&quot;</span><span class="p">:</span> <span class="n">get_urdf_path</span><span class="p">(</span><span class="n">left_rel_urdf</span><span class="p">),</span>
+    <span class="s2">&quot;wrist_link_name&quot;</span><span class="p">:</span> <span class="s2">&quot;left_hand_palm_link&quot;</span><span class="p">,</span> <span class="c1"># this is the palm link </span>
+    <span class="s2">&quot;kpt_link_names&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;left_hand_palm_link&#39;</span><span class="p">,</span> <span class="s1">&#39;left_hand_thumb_0_link&#39;</span><span class="p">,</span> <span class="s1">&#39;left_hand_middle_0_link&#39;</span><span class="p">,</span> <span class="s1">&#39;left_hand_index_0_link&#39;</span><span class="p">,</span> <span class="s1">&#39;left_hand_thumb_1_link&#39;</span><span class="p">,</span> <span class="s1">&#39;left_hand_middle_1_link&#39;</span><span class="p">,</span> <span class="s1">&#39;left_hand_index_1_link&#39;</span><span class="p">,</span> <span class="s1">&#39;left_hand_thumb_2_link&#39;</span><span class="p">]</span> 
+    <span class="c1"># These should be names of only collision links, find this from the output of running &quot;hand_proc/inspect_raw_urdf.py --gather_geoms&quot; from step 6 above</span>
+    <span class="s2">&quot;collision_groups&quot;</span><span class="p">:</span> <span class="p">{</span><span class="mi">7</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">13</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">14</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="c1"># also output from step 6</span>
+    <span class="s2">&quot;collision_palm_name&quot;</span><span class="p">:</span> <span class="s2">&quot;left_hand_palm_link&quot;</span><span class="p">,</span>
+
+    <span class="c1"># for actuators, first put in all 0s as placeholders, then tune the controller gains following the instructions in the next section. This only needs to be done once and the kp/kv values are fixed after. </span>
+    <span class="s2">&quot;actuators&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;finger&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">joint_exprs</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;.*0_joint&quot;</span><span class="p">,</span> <span class="s2">&quot;.*1_joint&quot;</span><span class="p">,</span> <span class="s2">&quot;.*2_joint&quot;</span><span class="p">],</span>
+        <span class="n">kp</span><span class="o">=</span><span class="mf">20.0</span><span class="p">,</span>
+        <span class="n">kv</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
+        <span class="n">force_range</span><span class="o">=</span><span class="mf">50.0</span><span class="p">,</span>
+      <span class="p">),</span>
+      <span class="s2">&quot;wrist_rot&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">joint_exprs</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s1">&#39;[LR]_forearm_(roll|pitch|yaw)_link_joint&#39;</span><span class="p">],</span>
+            <span class="n">kp</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+            <span class="n">kv</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+            <span class="n">force_range</span><span class="o">=</span><span class="mf">50.0</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="s2">&quot;wrist_trans&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">joint_exprs</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s1">&#39;[LR]_forearm_t[xyz]_link_joint&#39;</span><span class="p">],</span>
+            <span class="n">kp</span><span class="o">=</span><span class="mi">350</span><span class="p">,</span>
+            <span class="n">kv</span><span class="o">=</span><span class="mf">12.0</span><span class="p">,</span>
+            <span class="n">force_range</span><span class="o">=</span><span class="mf">50.0</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="n">DEX3_RIGHT_CFG</span><span class="o">=...</span> <span class="c1"># same structure as above, and use the same &#39;collision_groups&#39; </span>
+<span class="n">DEX3_CFGs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+  <span class="n">left</span><span class="o">=</span><span class="n">DEX3_LEFT_CFG</span><span class="p">,</span>
+  <span class="n">right</span><span class="o">=</span><span class="n">DEX3_RIGHT_CFG</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
-<p>and to visualize the effect</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">hand_proc</span><span class="o">/</span><span class="n">inspect_raw_urdf</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">skip_wrist_interp</span> <span class="o">-</span><span class="n">v</span> 
-</pre></div>
-</div>
+<ul class="simple">
+<li><p>Make sure the new config contains both left and right side hands, and name it <code class="docutils literal notranslate"><span class="pre">NEW_CFGs</span></code> so the automatic import in <code class="docutils literal notranslate"><span class="pre">dexmachina/dexmachina/envs/robot.py</span></code> can find it.</p></li>
+<li><p><strong>Once you are done, run this test script to check the new robot config can be founded:</strong> <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">tests/test_new_hand_cfg.py</span> <span class="pre">--hand</span> <span class="pre">dex3_hand</span></code></p></li>
+</ul>
+</section>
+<section id="tune-controller-gains">
+<h3>7. Tune controller gains<a class="headerlink" href="#tune-controller-gains" title="Link to this heading">¶</a></h3>
+<p>See more details in section below. We default to give a 0.8 gravity compensation for all the hands.</p>
+</section>
+<section id="run-full-retargeting-on-arctic-demonstrations">
+<h3>8. Run full-retargeting on ARCTIC demonstrations<a class="headerlink" href="#run-full-retargeting-on-arctic-demonstrations" title="Link to this heading">¶</a></h3>
+<p>Congrats, now the new hands are ready to use! We can now connect them with the existing (or your own) hand-object demonstration data and do policy training. Proceed to the next section for more details.</p>
+</section>
 </section>
 <section id="controller-gain-tuning">
 <h2>Controller gain tuning<a class="headerlink" href="#controller-gain-tuning" title="Link to this heading">¶</a></h2>
-<p>Exact steps and what to look for when you tune controller gains:</p>
-<ol class="arabic simple">
-<li><p>Tune kp first and set kv to 0: look at the speed at which the controller corrects itself to reach the target. You will see oscillation, but the amplitude and frequency of this vibration should be within a reasonable range of how fast the real robot can go, and the the joint should always center around the target.</p></li>
-<li><p>Next tune kv: fix the kp and start with a <em>large</em> range of kv: a typical first pass is [.1, 1, 100, 1000]. Now you don’t want any oscillation: a good kv should make the controller steadily but still quickly go straight to the target. If it’s too high the joint will be too slow or cannot fully reach the target, if it’s too low the joint will still oscillate.</p></li>
-</ol>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">¶</a></h3>
+<p><strong>A. Retargeting results from step 4 above</strong>
+Make sure you finished step 4 above, this will give you a reference trajectory from one of the ARCTIC demonstrations clips. Each clip is specified by both object and time-stamps, e.g. <code class="docutils literal notranslate"><span class="pre">hand_proc/retargeted/dex3_hand/waffleiron-40-300.pt</span></code></p>
+<p><strong>B. Specify joint groups</strong>
+Here we need <code class="docutils literal notranslate"><span class="pre">re</span></code> expressions that look up joint names. For now we group finger joints and wrist joints separately, i.e. a total of 3 groups.
+If you used the <code class="docutils literal notranslate"><span class="pre">add_wrist_dof.py</span></code> script from step 2, the wrist translation joints and rotation joints should be named the same, the <code class="docutils literal notranslate"><span class="pre">joint_exprs=[r'[LR]_forearm_(roll|pitch|yaw)_link_joint']</span></code> and <code class="docutils literal notranslate"><span class="pre">joint_exprs=[r'[LR]_forearm_t[xyz]_link_joint']</span></code> can be re-used across different dex hands.
+Exact steps and what to look for when you tune controller gains:</p>
+<p><strong>C. Tune the joints by group.</strong> Repeat the steps 1-2 below for all the joint groups, and follow this order: <code class="docutils literal notranslate"><span class="pre">wrist_trans</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">wrist_rot</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">finger</span></code>. When you tune one group, set the gains for the <em>un-tuned</em> groups to zeros (e.g. when you tune <code class="docutils literal notranslate"><span class="pre">wrist_rot</span></code>, set the <code class="docutils literal notranslate"><span class="pre">finger</span></code> groups’ <code class="docutils literal notranslate"><span class="pre">kp/kv</span></code> to 0s in the <code class="docutils literal notranslate"><span class="pre">hand_cfgs/xx.py</span></code> file.)</p>
+<p><strong>D. Have a monitor display</strong> Need screen display for visually inspect the joint behaviors.</p>
+</section>
+<section id="tune-kp">
+<h3>1. Tune kp<a class="headerlink" href="#tune-kp" title="Link to this heading">¶</a></h3>
+<p>First tune <code class="docutils literal notranslate"><span class="pre">kp</span></code> and set kv to 0. Look at the speed at which the controller corrects itself to reach the target. You will see oscillation, but the amplitude and frequency of this vibration should be within a reasonable range of how fast the real robot can go, and the the joint should always center around the target.</p>
+<p>Example command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">hand_proc</span><span class="o">/</span><span class="n">tune_gains</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">hand</span> <span class="n">dex3_hand</span> <span class="o">-</span><span class="n">B</span> <span class="mi">2</span> <span class="o">-</span><span class="n">v</span> <span class="o">--</span><span class="n">joint_group</span> <span class="n">wrist_trans</span>  <span class="o">--</span><span class="n">kp</span> <span class="mi">50</span> <span class="mi">1000</span> <span class="o">--</span><span class="n">kv</span> <span class="mi">0</span> <span class="mi">0</span>  <span class="o">-</span><span class="n">fr</span> <span class="mf">100.0</span> <span class="mf">100.0</span> <span class="o">--</span><span class="n">clip</span> <span class="n">waffleiron</span><span class="o">-</span><span class="mi">40</span><span class="o">-</span><span class="mi">300</span> <span class="o">--</span><span class="n">freespace</span> <span class="o">--</span><span class="n">step_interp</span> <span class="mi">1</span> <span class="o">--</span><span class="n">step_response</span> <span class="o">--</span><span class="n">skip_object</span>
+</pre></div>
+</div>
+</section>
+<section id="tune-kv">
+<h3>2. Tune kv<a class="headerlink" href="#tune-kv" title="Link to this heading">¶</a></h3>
+<p>Next tune <code class="docutils literal notranslate"><span class="pre">kv</span></code>: fix the kp and start with a <em>large</em> range of kv: a typical first pass is [.1, 1, 100, 1000]. Now you don’t want any oscillation: a good kv should make the controller steadily but still quickly go straight to the target. If it’s too high the joint will be too slow or cannot fully reach the target, if it’s too low the joint will still oscillate.</p>
 <p>Example command for single step tuning (Note that this script assumes you have on-screen display!)</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">hand_proc</span><span class="o">/</span><span class="n">tune_gains</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">hand</span> <span class="n">inspire</span> <span class="o">-</span><span class="n">B</span> <span class="mi">2</span> <span class="o">-</span><span class="n">v</span> <span class="o">--</span><span class="n">joint_group</span> <span class="n">finger</span>  <span class="o">--</span><span class="n">kp</span> <span class="mi">10</span> <span class="mi">40</span>   <span class="o">--</span><span class="n">kv</span> <span class="mi">0</span> <span class="mi">0</span>  <span class="o">-</span><span class="n">fr</span> <span class="mf">100.0</span> <span class="mf">100.0</span> <span class="o">--</span><span class="n">clip</span> <span class="n">ketchup</span><span class="o">-</span><span class="mi">30</span><span class="o">-</span><span class="mi">340</span> <span class="o">--</span><span class="n">freespace</span> <span class="o">--</span><span class="n">step_interp</span> <span class="mi">1</span> <span class="o">--</span><span class="n">step_response</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">hand_proc</span><span class="o">/</span><span class="n">tune_gains</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">hand</span> <span class="n">dex3_hand</span> <span class="o">-</span><span class="n">B</span> <span class="mi">2</span> <span class="o">-</span><span class="n">v</span> <span class="o">--</span><span class="n">joint_group</span> <span class="n">wrist_trans</span>  <span class="o">--</span><span class="n">kp</span> <span class="mi">300</span> <span class="mi">300</span> <span class="o">--</span><span class="n">kv</span> <span class="mi">1</span> <span class="mi">50</span>  <span class="o">-</span><span class="n">fr</span> <span class="mf">100.0</span> <span class="mf">100.0</span> <span class="o">--</span><span class="n">clip</span> <span class="n">waffleiron</span><span class="o">-</span><span class="mi">40</span><span class="o">-</span><span class="mi">300</span> <span class="o">--</span><span class="n">freespace</span> <span class="o">--</span><span class="n">step_interp</span> <span class="mi">1</span> <span class="o">--</span><span class="n">step_response</span> <span class="o">--</span><span class="n">skip_object</span>
 </pre></div>
 </div>
-<p>Once the single step looks good, control the full trajectory to see if it follows the demo well</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">hand_proc</span><span class="o">/</span><span class="n">tune_gains</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">hand</span> <span class="n">inspire</span> <span class="o">-</span><span class="n">B</span> <span class="mi">2</span> <span class="o">-</span><span class="n">v</span> <span class="o">--</span><span class="n">joint_group</span> <span class="n">finger</span>  <span class="o">--</span><span class="n">kp</span> <span class="mi">20</span> <span class="mi">20</span> <span class="o">--</span><span class="n">kv</span> <span class="mi">1</span> <span class="mi">1</span>  <span class="o">-</span><span class="n">fr</span> <span class="mf">100.0</span> <span class="mf">100.0</span> <span class="o">--</span><span class="n">clip</span> <span class="n">ketchup</span><span class="o">-</span><span class="mi">30</span><span class="o">-</span><span class="mi">340</span> <span class="o">--</span><span class="n">freespace</span>
+</section>
+<section id="control-the-full-trajectory">
+<h3>3. Control the full trajectory<a class="headerlink" href="#control-the-full-trajectory" title="Link to this heading">¶</a></h3>
+<p>Once the single step looks good, use the tuned parameters to control the full reference trajectory to see if it follows the demo well. Notice here the gain ranges are now fixed.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">hand_proc</span><span class="o">/</span><span class="n">tune_gains</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">hand</span> <span class="n">dex3_hand</span> <span class="o">-</span><span class="n">B</span> <span class="mi">2</span> <span class="o">-</span><span class="n">v</span> <span class="o">--</span><span class="n">joint_group</span> <span class="n">finger</span>  <span class="o">--</span><span class="n">kp</span> <span class="mi">100</span> <span class="mi">100</span> <span class="o">--</span><span class="n">kv</span> <span class="mi">6</span> <span class="mi">6</span>   <span class="o">-</span><span class="n">fr</span> <span class="mf">100.0</span> <span class="mf">100.0</span> <span class="o">--</span><span class="n">clip</span> <span class="n">waffleiron</span><span class="o">-</span><span class="mi">40</span><span class="o">-</span><span class="mi">300</span> <span class="o">--</span><span class="n">freespace</span>  <span class="o">--</span><span class="n">skip_object</span>
 </pre></div>
 </div>
+</section>
 </section>
 </section>
 
@@ -469,8 +554,24 @@ python tests/test_retarget.py -ugr -rn selfcol_smooth  --hand $HAND --clip $CLIP
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Dexterous Hand Asset Processing</a><ul>
-<li><a class="reference internal" href="#inspect-and-prepare-urdfs">Inspect and Prepare URDFs</a></li>
-<li><a class="reference internal" href="#controller-gain-tuning">Controller gain tuning</a></li>
+<li><a class="reference internal" href="#inspect-and-prepare-urdfs">Inspect and Prepare URDFs</a><ul>
+<li><a class="reference internal" href="#clean-up-and-inspect-urdfs">1. Clean up and inspect URDFs</a></li>
+<li><a class="reference internal" href="#add-6dof-wrist-joints-to-the-hand-urdf">2. Add 6dof wrist joints to the hand URDF</a></li>
+<li><a class="reference internal" href="#specify-retargeting-configs-as-yaml-file">3. Specify retargeting configs as yaml file</a></li>
+<li><a class="reference internal" href="#minimal-kinematic-re-targeting">4. Minimal Kinematic Re-targeting</a></li>
+<li><a class="reference internal" href="#specify-collision-groups">5. Specify collision groups</a></li>
+<li><a class="reference internal" href="#add-new-hand-config-files-to-the-existing-code-structure">6. Add new hand config files to the existing code structure</a></li>
+<li><a class="reference internal" href="#tune-controller-gains">7. Tune controller gains</a></li>
+<li><a class="reference internal" href="#run-full-retargeting-on-arctic-demonstrations">8. Run full-retargeting on ARCTIC demonstrations</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#controller-gain-tuning">Controller gain tuning</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#tune-kp">1. Tune kp</a></li>
+<li><a class="reference internal" href="#tune-kv">2. Tune kv</a></li>
+<li><a class="reference internal" href="#control-the-full-trajectory">3. Control the full trajectory</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

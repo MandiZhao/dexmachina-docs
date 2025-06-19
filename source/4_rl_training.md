@@ -20,3 +20,11 @@ Assume wandb logging is [setup](https://wandb.ai/). Run the bash script below:
 cd dexmachina
 bash examples/train_rl.sh
 ```
+
+## RL Evaluation
+
+Provide full checkpoint path saved from one of the rl training runs, e.g.
+```
+CK=logs/rl_games/inspire_hand/RUN_NAME/nn/inspire_hand.pth
+python dexmachina/rl/eval_rl_games.py -B 1 --checkpoint $CK -v 
+```

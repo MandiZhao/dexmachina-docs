@@ -5,4 +5,6 @@ To install the build package:
 cd docs
 pip install -r requirements.txt
 ```
-Each doc page is locally edited in markdown files, which are parsed (with `myst-parser`) and built into doc page with [Sphinx](https://www.sphinx-doc.org/en/master/usage/installation.html). To update the latest html, run `make html` in this directory. 
+# Build
+Each doc page is locally edited in markdown files, which are parsed (with `myst-parser`) and built into doc page with [Sphinx](https://www.sphinx-doc.org/en/master/usage/installation.html). To update the latest html, run `make html` in this directory for debugging, and run `make html-root` for the final version that updates the root `index.html`.
+

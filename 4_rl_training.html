@@ -344,6 +344,14 @@
 </pre></div>
 </div>
 </section>
+<section id="rl-evaluation">
+<h2>RL Evaluation<a class="headerlink" href="#rl-evaluation" title="Link to this heading">¶</a></h2>
+<p>Provide full checkpoint path saved from one of the rl training runs, e.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CK=logs/rl_games/inspire_hand/RUN_NAME/nn/inspire_hand.pth
+python dexmachina/rl/eval_rl_games.py -B 1 --checkpoint $CK -v 
+</pre></div>
+</div>
+</section>
 </section>
 
         </article>
@@ -411,6 +419,7 @@
 <li><a class="reference internal" href="#">RL Training and Evaluation</a><ul>
 <li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#rl-training">RL Training</a></li>
+<li><a class="reference internal" href="#rl-evaluation">RL Evaluation</a></li>
 </ul>
 </li>
 </ul>

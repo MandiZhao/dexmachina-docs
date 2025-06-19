@@ -1,11 +1,5 @@
 # Installation
 
-*If you'd like to install the entire conda environment that includes all the packages, use the yaml file:*
-```
-cd dexmachina
-conda env create -f dexmachina.yml
-```
-
 ## Minimal Requirements
 1. We recommend using conda environment with Python=3.10
 ```
@@ -18,33 +12,42 @@ pip install torch==2.5.1
 git clone https://github.com/MandiZhao/Genesis.git
 cd Genesis
 pip install -e .
-```
+pip install libigl==2.5.1 # NOTE: this is a temporary fix specifically for my fork of Genesis
 
-3. Install this custom version of rl-games, which supports wandb logging and curriculum setting.
-First, install prerequisites for rl-games:
-```
-pip install gymnasium ray 
-```
-Next, fork and local-install this repo:
-```
 git clone https://github.com/MandiZhao/rl_games.git
 cd rl_games
 pip install -e .
 ```
-4. Install additional packages for logging, plotting, video export, etc.
+3. Install additional packages for RL training:
 ```
-pip install seaborn wandb trimesh
+pip install gymnasium ray seaborn wandb trimesh
+```
+
+4. Local install the `dexmachina` package:
+```
+cd dexmachina
+pip install -e .
+```
+**If you'd like to install the full conda environment that includes all the packages, use the below yaml file:**
+```
+# this is obtained from: conda export -f dexmachina.yaml
+conda env create -f dexmachina.yaml
 ```
 
 
 ## Additional Package Dependencies 
 
 ### Kinematic retargeting
-Install the [dex-retargeting](https://github.com/dexsuite/dex-retargeting) package:
+- Install the [dex-retargeting](https://github.com/dexsuite/dex-retargeting) package:
 ```
 pip install dex_retargeting
 ```
 Note that this might downgrade your numpy to `numpy==1.26.4`, but it runs fine with rest of the codebase.
+
+- Minor but also need to install sklearn for mapping contacts -> this is needed if you want to process new data
+```
+pip install scikit-learn
+```
 
 ### Process Additional ARCTIC data 
 Follow instructions from ARCTIC repo and install in a *separate* conda environment: https://github.com/zc-alexfan/arctic/blob/master/docs/setup.md
