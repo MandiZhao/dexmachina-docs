@@ -375,7 +375,8 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">dex_retargeting</span>
 </pre></div>
 </div>
-<p>Note that this might downgrade your numpy to <code class="docutils literal notranslate"><span class="pre">numpy==1.26.4</span></code>, but it runs fine with rest of the codebase.</p>
+<p>Note that this might downgrade your numpy to <code class="docutils literal notranslate"><span class="pre">numpy==1.26.4</span></code>, but it runs fine with rest of the codebase.
+If you see import error from <code class="docutils literal notranslate"><span class="pre">networkx</span></code>, run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">networkx==3.4.2</span></code></p>
 <ul class="simple">
 <li><p>Minor but also need to install sklearn for mapping contacts -&gt; this is needed if you want to process new data</p></li>
 </ul>
@@ -389,9 +390,65 @@
 </section>
 <section id="raytracing-rendering">
 <h3>Raytracing rendering<a class="headerlink" href="#raytracing-rendering" title="Link to this heading">¶</a></h3>
+<p>This must be built separately. Below instructions are tested for <code class="docutils literal notranslate"><span class="pre">dexmachina</span></code> conda environment with Python=3.10</p>
 <ul class="simple">
-<li><p>Follow the official instruction to build this separate raytracer package: <a class="reference external" href="https://genesis-world.readthedocs.io/en/latest/user_guide/getting_started/visualization.html#photo-realistic-ray-tracing-rendering">here</a></p></li>
 <li><p>You might need sudo install a new cuda driver globally: Try <code class="docutils literal notranslate"><span class="pre">wget</span></code> to install <a class="reference external" href="https://developer.nvidia.com/cuda-12-2-2-download-archive?target_os=Linux&amp;amp;target_arch=x86_64&amp;amp;Distribution=Ubuntu&amp;amp;target_version=22.04&amp;amp;target_type=deb_local">this link</a> – it installs the latest driver 570 and cuda12.8</p></li>
+</ul>
+<ol class="arabic simple">
+<li><p>Update git submodules</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># inside Genesis/</span>
+<span class="n">git</span> <span class="n">submodule</span> <span class="n">update</span> <span class="o">--</span><span class="n">init</span> <span class="o">--</span><span class="n">recursive</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="s2">&quot;.[render]&quot;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Install/upgrad g++ and gcc (to) version &gt;= 11.</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">build</span><span class="o">-</span><span class="n">essential</span> <span class="n">manpages</span><span class="o">-</span><span class="n">dev</span> <span class="n">software</span><span class="o">-</span><span class="n">properties</span><span class="o">-</span><span class="n">common</span>
+<span class="n">sudo</span> <span class="n">add</span><span class="o">-</span><span class="n">apt</span><span class="o">-</span><span class="n">repository</span> <span class="n">ppa</span><span class="p">:</span><span class="n">ubuntu</span><span class="o">-</span><span class="n">toolchain</span><span class="o">-</span><span class="n">r</span><span class="o">/</span><span class="n">test</span>
+<span class="n">sudo</span> <span class="n">apt</span> <span class="n">update</span> <span class="o">&amp;&amp;</span> <span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">gcc</span><span class="o">-</span><span class="mi">11</span> <span class="n">g</span><span class="o">++-</span><span class="mi">11</span>
+<span class="n">sudo</span> <span class="n">update</span><span class="o">-</span><span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">g</span><span class="o">++</span> <span class="n">g</span><span class="o">++</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">g</span><span class="o">++-</span><span class="mi">11</span> <span class="mi">110</span>
+<span class="n">sudo</span> <span class="n">update</span><span class="o">-</span><span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">gcc</span> <span class="n">gcc</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">gcc</span><span class="o">-</span><span class="mi">11</span> <span class="mi">110</span>
+
+<span class="c1"># verify version</span>
+<span class="n">g</span><span class="o">++</span> <span class="o">--</span><span class="n">version</span>
+<span class="n">gcc</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Install CMake if your local version does not meet the required version.</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">snap</span> <span class="n">install</span> <span class="n">cmake</span> <span class="o">--</span><span class="n">classic</span>
+<span class="n">cmake</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Install other dependencies</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">libvulkan</span><span class="o">-</span><span class="n">dev</span> <span class="n">xorg</span><span class="o">-</span><span class="n">dev</span> <span class="c1"># Vulkan, X11 &amp; RandR</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">uuid</span><span class="o">-</span><span class="n">dev</span> <span class="c1"># UUID </span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">zlib1g</span><span class="o">-</span><span class="n">dev</span> <span class="c1"># zlib</span>
+</pre></div>
+</div>
+<p>Optionally for non-sudo users:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">c</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span> <span class="n">gcc</span><span class="o">=</span><span class="mf">11.4</span> <span class="n">gxx</span><span class="o">=</span><span class="mf">11.4</span> 
+<span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">c</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span> <span class="n">cmake</span><span class="o">=</span><span class="mf">3.26.1</span>
+<span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">c</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span> <span class="n">vulkan</span><span class="o">-</span><span class="n">tools</span> <span class="n">vulkan</span><span class="o">-</span><span class="n">headers</span> <span class="n">xorg</span><span class="o">-</span><span class="n">xproto</span> <span class="c1"># Vulkan, X11 &amp; RandR</span>
+<span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">c</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span> <span class="n">libuuid</span> <span class="c1"># UUID</span>
+<span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">c</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span> <span class="n">zlib</span> <span class="c1"># zlib</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Build LuisaRender. Note here I set <code class="docutils literal notranslate"><span class="pre">PYTHON_VERSIONS=3.10</span></code>. Remember to use the correct cmake. By default, it uses OptiX denoiser (For CUDA backend only). If you need OIDN denoiser, append <code class="docutils literal notranslate"><span class="pre">-D</span> <span class="pre">LUISA_COMPUTE_DOWNLOAD_OIDN=ON</span></code></p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>cd genesis/ext/LuisaRender
+cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D PYTHON_VERSIONS=3.10 -D LUISA_COMPUTE_DOWNLOAD_NVCOMP=ON -D LUISA_COMPUTE_ENABLE_GUI=OFF -D LUISA_RENDER_BUILD_TESTS=OFF # remember to check python version
+cmake --build build -j $(nproc)
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Build instructions are originally from the official instructions <a class="reference external" href="https://genesis-world.readthedocs.io/en/latest/user_guide/getting_started/visualization.html#photo-realistic-ray-tracing-rendering">here</a></p></li>
 </ul>
 </section>
 </section>
